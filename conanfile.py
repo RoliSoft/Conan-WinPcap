@@ -1,13 +1,13 @@
 from conans import ConanFile
-import os, shutil
 from conans.tools import download, unzip, check_sha1
-from conans import CMake
+import os, shutil
 
 class WinPcapConan(ConanFile):
 	name = "WinPcap"
 	version = "4.1.2"
 	license = "BSD"
 	url = "https://github.com/RoliSoft/Conan-WinPcap"
+	exports = ["FindWinPcap.cmake"]
 	settings = {"os":   ["Windows"],
 	            "arch": ["x86", "x86_64"]}
 	FOLDER_NAME = "WpdPack"
@@ -21,15 +21,17 @@ class WinPcapConan(ConanFile):
 		os.unlink(zip_name)
 	
 	def package(self):
+		self.copy("FindWinPcap.cmake", dst=".", src=".")
+		
 		self.copy(pattern="*.h", dst="include", src="%s/Include" % self.FOLDER_NAME)
 		self.copy(pattern="*.a", dst="lib",     src="%s/Include" % self.FOLDER_NAME, keep_path=False)
 		
 		if self.settings.arch == "x86":
-			self.copy(pattern="wpcap.lib",  dst="lib", src="%s/Lib" % self.FOLDER_NAME, keep_path=False)
-			self.copy(pattern="Packet.lib", dst="lib", src="%s/Lib" % self.FOLDER_NAME, keep_path=False)
+			self.copy("wpcap.lib",  dst="lib", src="%s/Lib" % self.FOLDER_NAME, keep_path=False)
+			self.copy("Packet.lib", dst="lib", src="%s/Lib" % self.FOLDER_NAME, keep_path=False)
 		else:
-			self.copy(pattern="wpcap.lib",  dst="lib", src="%s/Lib/x64" % self.FOLDER_NAME, keep_path=False)
-			self.copy(pattern="Packet.lib", dst="lib", src="%s/Lib/x64" % self.FOLDER_NAME, keep_path=False)
+			self.copy("wpcap.lib",  dst="lib", src="%s/Lib/x64" % self.FOLDER_NAME, keep_path=False)
+			self.copy("Packet.lib", dst="lib", src="%s/Lib/x64" % self.FOLDER_NAME, keep_path=False)
 	
 	def package_info(self):
 		self.cpp_info.libs = ['WinPcap']
