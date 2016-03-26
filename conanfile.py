@@ -6,7 +6,7 @@ class WinPcapConan(ConanFile):
 	name = "WinPcap"
 	version = "4.1.2"
 	license = "BSD"
-	url = "https://github.com/RoliSoft/Conan-WinPcap"
+	url="http://github.com/RoliSoft/Conan-WinPcap"
 	exports = ["FindWinPcap.cmake"]
 	settings = {"os":   ["Windows"],
 	            "arch": ["x86", "x86_64"]}
@@ -34,4 +34,4 @@ class WinPcapConan(ConanFile):
 			self.copy("Packet.lib", dst="lib", src="%s/Lib/x64" % self.FOLDER_NAME, keep_path=False)
 	
 	def package_info(self):
-		self.cpp_info.libs = ['WinPcap']
+		self.cpp_info.libs = ['wpcap', 'Packet']
